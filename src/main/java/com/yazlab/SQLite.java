@@ -1,6 +1,7 @@
 package com.yazlab;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class SQLite {
 
@@ -36,7 +37,10 @@ public class SQLite {
         return  connection;
     }
 
-    public void selectAll() throws Exception {
+    public ArrayList<Ev> selectEv() throws Exception {
+
+        ArrayList<Ev> evArrayList = new ArrayList<>();
+
 
         String sql = "SELECT * FROM tblEV";
 
@@ -45,41 +49,26 @@ public class SQLite {
         ResultSet resultSet = statement.executeQuery(sql);
 
         while(resultSet.next()) {
-            System.out.println(resultSet.getInt(1));
-            System.out.println(resultSet.getString(2));
-            System.out.println(resultSet.getString(3));
-            System.out.println(resultSet.getInt(4));
-            System.out.println(resultSet.getInt(5));
-            System.out.println(resultSet.getInt(6));
-            System.out.println(resultSet.getInt(7));
-            System.out.println(resultSet.getDouble(8));
-            System.out.println(resultSet.getString(9));
+            Ev ev = new Ev();
+
+            ev.setEvID(resultSet.getInt(1));
+            ev.setEvIL(resultSet.getString(2));
+            ev.setEvEmlakTipi(resultSet.getString(3));
+            ev.setEvAlan(resultSet.getInt(4));
+            ev.setEvOdaSayisi(resultSet.getInt(5));
+            ev.setEvBinaYasi(resultSet.getInt(6));
+            ev.setEvBulKat(resultSet.getInt(7));
+            ev.setEvFiyat(resultSet.getDouble(8));
+            ev.setEvAciklama(resultSet.getString(9));
+
+            evArrayList.add(ev);
         }
-    }
 
-    public void insert(int column, String data) throws Exception{
 
-        String sql = "INSERT INTO tblEV(evID, evIL, evEmlak, evAlan, evOdaSayisi, evBinaYasi, evBulKat, evFiyat, evAciklama) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        Connection connection = connect();
-
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-        preparedStatement.setInt(1,2);
-        preparedStatement.setString(2,"İstanbul");
-        preparedStatement.setString(3, "Kiralık");
-        preparedStatement.setInt(4,120);
-        preparedStatement.setInt(5,4);
-        preparedStatement.setInt(6,5);
-        preparedStatement.setInt(7,3);
-        preparedStatement.setDouble(8, 150000);
-        preparedStatement.setString(9, "Kiralık için uygun");
-
-        preparedStatement.executeUpdate();
+        return evArrayList;
     }
 
     public void insertEv(Ev ev) throws Exception{
-        //TODO: Ev ve Resim sınıfı türlerinden iki parametre alınacak ve db'ye kaydedilecek.
 
         String evSql = "INSERT INTO tblEV(evID, evIL, evEmlak, evAlan, evOdaSayisi, evBinaYasi, evBulKat, evFiyat, evAciklama) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
