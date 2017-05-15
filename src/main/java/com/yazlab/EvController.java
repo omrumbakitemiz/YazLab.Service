@@ -1,12 +1,13 @@
 package com.yazlab;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,5 +43,18 @@ public class EvController {
         sqLite.insertEv(ev);
 
         return new ResponseEntity<List<Ev>> (evList , HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{path}", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getImage(@RequestParam("path") String path) throws IOException{
+
+        ClassPathResource imgFile = new ClassPathResource("image/" + path + ".jpg");
+
+        byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(bytes);
     }
 }

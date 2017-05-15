@@ -1,6 +1,7 @@
 package com.yazlab;
 
 public class Resim{
+
     private int resimID;
     private String resimYol;
     private int resimEvID;
